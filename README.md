@@ -1,0 +1,2 @@
+# bazydanych
+dupa
