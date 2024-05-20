@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Zarządzanie Konkursami Jeździeckimi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="text"],
+        input[type="date"],
+        input[type="time"],
+        input[type="number"],
+        input[type="email"],
+        input[type="password"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        input[type="submit"] {
+            background-color: #ffb6c1;
+            color: white;
+            border-color: #ffb6c1;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #ffb6c1;
+        }
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .logout {
+            text-align: center;
+            margin: 20px;
+        }
+        .delete-button {
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .delete-button:hover {
+            background-color: #c9302c;
+        }
+    </style>
+</head>
+<body>
+    <h1>Zarządzanie Konkursami Jeździeckimi</h1>
+
+    <div class="logout">
+        <form action="/logout" method="get">
+            <input type="submit" value="Wyloguj się">
+        </form>
+    </div>
+
+    {% if session.rola == 'Administrator' %}
+    <h2>Dodaj Konkurs</h2>
+    <form action="/dodaj_konkurs" method="post">
+        <label for="nazwa">Nazwa konkursu:</label>
+        <input type="text" id="nazwa" name="nazwa">
+        <label for="poczatek">Data rozpoczęcia:</label>
+        <input type="date" id="poczatek" name="poczatek">
+        <label for="koniec">Data zakończenia:</label>
+        <input type="date" id="koniec" name="koniec">
+        <label for="miejsce">Miejsce:</label>
+        <input type="text" id="miejsce" name="miejsce">
+        <input type="submit" value="Dodaj konkurs">
+    </form>
+    {% endif %}
+
+    <h2>Lista Konkursów</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nazwa Konkursu</th>
+                <th>Data Rozpoczęcia</th>
+                <th>Data Zakończenia</th>
+                <th>Miejsce</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for konkurs in konkursy %}
+            <tr>
+                <td>{{ konkurs[0] }}</td>
+                <td>{{ konkurs[1] }}</td>
+                <td>{{ konkurs[2] }}</td>
+                <td>{{ konkurs[3] }}</td>
+                <td>{{ konkurs[4] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if session.rola == 'Administrator' %}
+    <h2>Rejestracja Uczestnictwa</h2>
+    <form action="/rejestracja_uczestnictwa" method="post">
+        <label for="zawodnik_id">ID zawodnika:</label>
+        <input type="text" id="zawodnik_id" name="zawodnik_id">
+        <label for="konkurs_id">ID konkursu:</label>
+        <input type="text" id="konkurs_id" name="konkurs_id">
+        <label for="kon_id">ID konia:</label>
+        <input type="text" id="kon_id" name="kon_id">
+        <label for="start_przejazdu">Start przejazdu:</label>
+        <input type="time" id="start_przejazdu" name="start_przejazdu">
+        <label for="koniec_przejazdu">Koniec przejazdu:</label>
+        <input type="time" id="koniec_przejazdu" name="koniec_przejazdu">
+        <label for="czas_przejazdu">Czas przejazdu:</label>
+        <input type="time" id="czas_przejazdu" name="czas_przejazdu">
+        <input type="submit" value="Zarejestruj przejazd">
+    </form>
+
+    <h2>Lista Przejazdów</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Start Przejazdu</th>
+                <th>Koniec Przejazdu</th>
+                <th>Czas Przejazdu</th>
+                <th>ID Konkursu</th>
+                <th>ID Zawodnika</th>
+                <th>ID Konia</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for przejazd in przejazdy %}
+            <tr>
+                <td>{{ przejazd[0] }}</td>
+                <td>{{ przejazd[1] }}</td>
+                <td>{{ przejazd[2] }}</td>
+                <td>{{ przejazd[3] }}</td>
+                <td>{{ przejazd[4] }}</td>
+                <td>{{ przejazd[5] }}</td>
+                <td>{{ przejazd[6] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    <h2>Zarządzanie Zawodnikami</h2>
+    {% if session.rola == 'Administrator' %}
+    <form action="/zarzadzanie_zawodnikami" method="post">
+        <label for="imie">Imię:</label>
+        <input type="text" id="imie" name="imie">
+        <label for="nazwisko">Nazwisko:</label>
+        <input type="text" id="nazwisko" name="nazwisko">
+        <label for="data_urodzenia">Data urodzenia:</label>
+        <input type="date" id="data_urodzenia" name="data_urodzenia">
+        <label for="kraj_pochodzenia">Kraj pochodzenia:</label>
+        <input type="text" id="kraj_pochodzenia" name="kraj_pochodzenia">
+        <label for="miasto_pochodzenia">Miasto pochodzenia:</label>
+        <input type="text" id="miasto_pochodzenia" name="miasto_pochodzenia">
+        <label for="poziom_umiejetnosci">Poziom umiejętności:</label>
+        <input type="text" id="poziom_umiejetnosci" name="poziom_umiejetnosci">
+        <input type="submit" value="Dodaj zawodnika">
+    </form>
+    {% endif %}
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Imię</th>
+                <th>Nazwisko</th>
+                <th>Data Urodzenia</th>
+                <th>Kraj Pochodzenia</th>
+                <th>Miasto Pochodzenia</th>
+                <th>Poziom Umiejętności</th>
+                {% if session.rola == 'Administrator' %}
+                <th>Akcja</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for zawodnik in zawodnicy %}
+            <tr>
+                <td>{{ zawodnik[0] }}</td>
+                <td>{{ zawodnik[1] }}</td>
+                <td>{{ zawodnik[2] }}</td>
+                <td>{{ zawodnik[3] }}</td>
+                <td>{{ zawodnik[4] }}</td>
+                <td>{{ zawodnik[5] }}</td>
+                <td>{{ zawodnik[6] }}</td>
+                {% if session.rola == 'Administrator' %}
+                <td>
+                    <form action="/usun_zawodnika" method="post" style="display:inline;">
+                        <input type="hidden" name="zawodnik_id" value="{{ zawodnik[0] }}">
+                        <input type="submit" value="Usuń" class="delete-button">
+                    </form>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Zarządzanie Konmi</h2>
+    {% if session.rola == 'Administrator' %}
+    <form action="/zarzadzanie_konmi" method="post">
+        <label for="imie">Imię:</label>
+        <input type="text" id="imie" name="imie">
+        <label for="rasa">Rasa:</label>
+        <input type="text" id="rasa" name="rasa">
+        <label for="wiek">Wiek:</label>
+        <input type="number" id="wiek" name="wiek">
+        <label for="wlasciciel_id">ID właściciela:</label>
+        <input type="text" id="wlasciciel_id" name="wlasciciel_id">
+        <input type="submit" value="Dodaj konia">
+    </form>
+    {% endif %}
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Imię</th>
+                <th>Rasa</th>
+                <th>Wiek</th>
+                <th>ID Właściciela</th>
+                {% if session.rola == 'Administrator' %}
+                <th>Akcja</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for kon in konie %}
+            <tr>
+                <td>{{ kon[0] }}</td>
+                <td>{{ kon[1] }}</td>
+                <td>{{ kon[2] }}</td>
+                <td>{{ kon[3] }}</td>
+                <td>{{ kon[4] }}</td>
+                {% if session.rola == 'Administrator' %}
+                <td>
+                    <form action="/usun_konia" method="post" style="display:inline;">
+                        <input type="hidden" name="kon_id" value="{{ kon[0] }}">
+                        <input type="submit" value="Usuń" class="delete-button">
+                    </form>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if session.rola == 'Administrator' %}
+    <h2>Rejestracja Wyników</h2>
+    <form action="/rejestracja_wynikow" method="post">
+        <label for="wynik">Wynik:</label>
+        <input type="text" id="wynik" name="wynik">
+        <label for="ilosc_bledow">Ilość błędów:</label>
+        <input type="text" id="ilosc_bledow" name="ilosc_bledow">
+        <label for="data_wyniku">Data wyniku:</label>
+        <input type="date" id="data_wyniku" name="data_wyniku">
+        <label for="konkurs_id">ID konkursu:</label>
+        <input type="text" id="konkurs_id" name="konkurs_id">
+        <label for="zawodnik_id">ID zawodnika:</label>
+        <input type="text" id="zawodnik_id" name="zawodnik_id">
+        <label for="kon_id">ID konia:</label>
+        <input type="text" id="kon_id" name="kon_id">
+        <input type="submit" value="Zarejestruj wynik">
+    </form>
+    {% endif %}
+    
+    {% if session.rola in ['Administrator', 'Trener', 'Uczestnik'] %}
+    <h2>Analiza Wyników</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Wynik</th>
+                <th>Ilość Błędów</th>
+                <th>Data Wyniku</th>
+                <th>ID Konkursu</th>
+                <th>ID Zawodnika</th>
+                <th>ID Konia</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for wynik in wyniki %}
+            <tr>
+                <td>{{ wynik[0] }}</td>
+                <td>{{ wynik[1] }}</td>
+                <td>{{ wynik[2] }}</td>
+                <td>{{ wynik[3] }}</td>
+                <td>{{ wynik[4] }}</td>
+                <td>{{ wynik[5] }}</td>
+                <td>{{ wynik[6] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>    
+    </table>
+    {% endif %}
+</body>
+</html>

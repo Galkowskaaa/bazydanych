@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Logowanie/Rejestracja</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        .tab.active {
+            border-bottom: 2px solid #ffb6c1;
+        }
+        .form-container {
+            display: none;
+        }
+        .form-container.active {
+            display: block;
+        }
+        form {
+            width: 100%;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        input[type="submit"] {
+            background-color: #ffb6c1;
+            color: white;
+            border-color: #ffb6c1;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #ffb6c1;
+        }
+    </style>
+    <script>
+        function showTab(tabId) {
+            var tabs = document.querySelectorAll('.tab');
+            var forms = document.querySelectorAll('.form-container');
+            tabs.forEach(function(tab) {
+                tab.classList.remove('active');
+            });
+            forms.forEach(function(form) {
+                form.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            document.getElementById(tabId + '-form').classList.add('active');
+        }
+        // Set default active tab
+        document.addEventListener('DOMContentLoaded', function() {
+            showTab('login');
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" id="login" onclick="showTab('login')">Logowanie</div>
+            <div class="tab" id="register" onclick="showTab('register')">Rejestracja</div>
+        </div>
+        <div class="form-container active" id="login-form">
+            <form action="/login_register" method="post">
+                <h2>Logowanie</h2>
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="email">
+                <label for="password">Hasło:</label>
+                <input type="password" id="password" name="password">
+                <input type="submit" value="Zaloguj się">
+            </form>
+        </div>
+        <div class="form-container" id="register-form">
+            <form action="/login_register" method="post">
+                <h2>Rejestracja</h2>
+                <label for="imie">Imię:</label>
+                <input type="text" id="imie" name="imie">
+                <label for="nazwisko">Nazwisko:</label>
+                <input type="text" id="nazwisko" name="nazwisko">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email">
+                <label for="haslo">Hasło:</label>
+                <input type="password" id="haslo" name="haslo">
+                <label for="rola">Rola:</label>
+                <input type="text" id="rola" name="rola">
+                <label for="pesel">PESEL:</label>
+                <input type="text" id="pesel" name="pesel">
+                <input type="submit" value="Zarejestruj się">
+            </form>
+        </div>
+    </div>
+</body>
+</html>
