@@ -1,2 +1,1 @@
-# bazydanych
-dupa
+Readme na classroom w pdf :)
